@@ -97,9 +97,9 @@ class I2C_Decoder:
             raise Exception("ERROR: Unpacker invalid crc8")
         self._data = data[2:self._length-2]
         # create string
-        answer = ""
+        answer = []
         for c in self._data:
-            answer = answer + chr(c)
+            answer.append(c)
         return answer
 
     def get_last_error(self):
