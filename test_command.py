@@ -34,13 +34,58 @@ command_dict = {
     1412: f"\x83\x21",      # Get status flow 12
     1413: f"\x83\x26",  # get invalid in status 
 
+    1501: f"\x80\x04",      # Enable flow 1
+    1502: f"\x80\x0D",      # Enable flow 2
+    1503: f"\x80\x10",      # Enable flow 3
+    1504: f"\x80\x11",      # Enable flow 4
+    1505: f"\x80\x12",      # Enable flow 5
+    1506: f"\x80\x13",      # Enable flow 6
+    1507: f"\x80\x17",      # Enable flow 7
+    1508: f"\x80\x19",      # Enable flow 8
+    1509: f"\x80\x1A",      # Enable flow 9
+    1510: f"\x80\x1B",      # Enable flow 10
+    1511: f"\x80\20",      # Enable flow 11
+    1512: f"\x80\x21",      # Enable flow 12
+    1513: f"\x80\x26",  # Enable invalid flow
+
+    1601: f"\x81\x04",      # Disable flow 1
+    1602: f"\x81\x0D",      # Disable flow 2
+    1603: f"\x81\x10",      # Disable flow 3
+    1604: f"\x81\x11",      # Disable flow 4
+    1605: f"\x81\x12",      # Disable flow 5
+    1606: f"\x81\x13",      # Disable flow 6
+    1607: f"\x81\x17",      # Disable flow 7
+    1608: f"\x81\x19",      # Disable flow 8
+    1609: f"\x81\x1A",      # Disable flow 9
+    1610: f"\x81\x1B",      # Disable flow 10
+    1611: f"\x81\x20",      # Disable flow 11
+    1612: f"\x81\x21",      # Disable flow 12
+    1613: f"\x81\x26",  # Disable invalid flow
+
+    1701: f"\x82\x04",      # Get value flow 1
+    1702: f"\x82\x0D",      # Get value flow 2
+    1703: f"\x82\x10",      # Get value flow 3
+    1704: f"\x82\x11",      # Get value flow 4
+    1705: f"\x82\x12",      # Get value flow 5
+    1706: f"\x82\x13",      # Get value flow 6
+    1707: f"\x82\x17",      # Get value flow 7
+    1708: f"\x82\x19",      # Get value flow 8
+    1709: f"\x82\x1A",      # Get value flow 9
+    1710: f"\x82\x1B",      # Get value flow 10
+    1711: f"\x82\x20",      # Get value flow 11
+    1712: f"\x82\x21",      # Get value flow 12
+    1713: f"\x82\x26",  # Get value invalid flow
+
+
     4000: f"\xC0",  # reset device
     4100: f"\xC1",  # get device live_time
 }
 
 command_text_dict = {
     1 :   f"Exit loop" ,      # exit 
+
     1000: f"Send ack to device",  # Send ACK to device
+
     1100: f"Disable all pins",     # disable all pins
     1200: f"Enable all pins",     # enable all pins
     1300: f"Get all pin values",      # Get all pin values
@@ -58,8 +103,51 @@ command_text_dict = {
     1412: f"Get status flow 12",  
     1413: f"Get invalid pin status",
 
+    1501: f"Enable flow 1", 
+    1502: f"Enable flow 2", 
+    1503: f"Enable flow 3",
+    1504: f"Enable flow 4",
+    1505: f"Enable flow 5",
+    1506: f"Enable flow 6",
+    1507: f"Enable flow 7",
+    1508: f"Enable flow 8",
+    1509: f"Enable flow 9",
+    1510: f"Enable flow 10",
+    1511: f"Enable flow 11",
+    1512: f"Enable flow 12",
+    1513: f"Enable invalid flow", 
+
+    1601: f"Disable flow 1", 
+    1602: f"Disable flow 2", 
+    1603: f"Disable flow 3",
+    1604: f"Disable flow 4",
+    1605: f"Disable flow 5",
+    1606: f"Disable flow 6",
+    1607: f"Disable flow 7",
+    1608: f"Disable flow 8",
+    1609: f"Disable flow 9",
+    1610: f"Disable flow 10",
+    1611: f"Disable flow 11",
+    1612: f"Disable flow 12",
+    1613: f"Disable invalid flow", 
+
+    1701: f"Get value flow 1", 
+    1702: f"Get value flow 2", 
+    1703: f"Get value flow 3",
+    1704: f"Get value flow 4",
+    1705: f"Get value flow 5",
+    1706: f"Get value flow 6",
+    1707: f"Get value flow 7",
+    1708: f"Get value flow 8",
+    1709: f"Get value flow 9",
+    1710: f"Get value flow 10",
+    1711: f"Get value flow 11",
+    1712: f"Get value flow 12",
+    1713: f"Get value invalid flow", 
+
+
     4000: f"Reset device",
-    4001: f"Get Device Alive time",
+    4100: f"Get Device Alive time",
 
 }
 
@@ -103,12 +191,21 @@ if __name__ == "__main__":
                     if (send_byte == f"\x86") :  # get all flow value
                         print_all_flow_value(data[1:])
 
-                    if (send_byte[0] == f"\x83") : # get all flow status
+                    if (send_byte[0] == f"\x83") : # get  flow status
                         print(f"status {data[1]}")
+
+                    if (send_byte[0] == f"\x82") : # get  flow value
+                        values = np.frombuffer(bytearray(data[1:]), np.float32)
+                        print(f"value {values[0]}")
+                    if send_byte[0] ==  f"\xC1":
+                        print(f"data size {len(data)}")
+                        values = np.frombuffer(bytearray(data[1:]), np.uint32)
+                        print(f"alive time {values[0] /1000} sec")
 
             else:
                 print("Response error")
-
+        else:
+            print("Command not found")
 
      
     print("Exit app")
